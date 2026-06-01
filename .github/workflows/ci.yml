@@ -35,5 +35,5 @@ jobs:
           context: .
           push: true
           tags: |
-            opestyle/nodejs-app:${{ steps.meta.outputs.branch }}-dev
-            opestyle/nodejs-app:dev
+            ${{ secrets.DOCKERHUB_USERNAME }}/nodejs-app:${{ steps.meta.outputs.branch }}-dev
+            ${{ secrets.DOCKERHUB_USERNAME }}/nodejs-app:dev
