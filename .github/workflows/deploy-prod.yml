@@ -56,7 +56,8 @@ jobs:
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-      - run: aws eks update-kubeconfig --name training-cluster --region us-east-1
+          aws-region: ${{ secrets.AWS_REGION }}
+      - run: aws eks update-kubeconfig --name training-cluster --region ${{ secrets.AWS_REGION }}
       - name: Update image tag in k8s manifest
         run: |
           sed -i "s|image:.*|image: ${{ secrets.DOCKERHUB_USERNAME }}/nodejs-app:${{ needs.docker.outputs.image_tag }}|" k8s/05-service/deployment-service.yaml
