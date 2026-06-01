@@ -35,5 +35,5 @@ jobs:
           context: .
           push: true
           tags: |
-            chafah/nodejs-app:${{ steps.meta.outputs.branch }}-dev
-            chafah/nodejs-app:dev
+            opestyle/nodejs-app:${{ steps.meta.outputs.branch }}-dev
+            opestyle/nodejs-app:dev
