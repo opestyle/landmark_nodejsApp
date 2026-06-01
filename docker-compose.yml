@@ -1,0 +1,65 @@
+# Docker Compose for teaching multi-container applications
+# This file demonstrates:
+# - Service orchestration
+# - Container networking
+# - Volume management
+# - Environment configuration
+# - Service dependencies
+
+services:
+  # Application service
+  app:
+    build: .                                                           # Build from Dockerfile
+    container_name: landmark-app                                       # Container name
+    ports:
+      - "3000:3000"                                                    # Map port 3000
+    environment:
+      # Database connection string
+      # Format: mysql://user:password@host:port/database
+      # 'db' is the service name (DNS resolution)
+      - DATABASE_URL=mysql://landmark:landmark123@db:3306/landmark_devops
+      - NODE_ENV=development
+    depends_on:
+      - db                                                             # Wait for db service to start
+    networks:
+      - landmark-network                                               # Connect to custom network
+    # Uncomment for development with hot reload
+    # volumes:
+    #   - ./client:/app/client
+    #   - ./server:/app/server
+
+  # Database service
+  db:
+    image: mysql:8.0                                            # Use official MySQL image
+    container_name: landmark-db                                        # Container name
+    environment:
+      # MySQL root password
+      - MYSQL_ROOT_PASSWORD=root123
+      # Database to create
+      - MYSQL_DATABASE=landmark_devops
+      # Non-root user for application
+      - MYSQL_USER=landmark
+      - MYSQL_PASSWORD=landmark123
+    ports:
+      - "3307:3306"                                                    # Map port 3307 -> 3306
+    volumes:
+      # Named volume for persistent data
+      # Data survives container restart
+      - db_data:/var/lib/mysql
+    networks:
+      - landmark-network                                               # Connect to custom network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+# Named volumes for persistent storage
+volumes:
+  db_data:
+    driver: local
+
+# Custom network for service communication
+networks:
+  landmark-network:
+    driver: bridge

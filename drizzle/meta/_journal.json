@@ -1,0 +1,27 @@
+{
+  "version": "7",
+  "dialect": "mysql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "5",
+      "when": 1777133570748,
+      "tag": "0000_sleepy_princess_powerful",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "5",
+      "when": 1777133745214,
+      "tag": "0001_slimy_iron_monger",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1777153722344,
+      "tag": "0002_brave_slipstream",
+      "breakpoints": true
+    }
+  ]
+}

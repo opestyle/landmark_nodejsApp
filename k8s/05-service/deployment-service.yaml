@@ -1,0 +1,44 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: landmark-devops
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: landmark-app
+  namespace: landmark-devops
+  labels:
+    app: landmark-app
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: landmark-app
+  template:
+    metadata:
+      labels:
+        app: landmark-app
+    spec:
+      containers:
+        - name: app
+          image: chafah/nodejs-app:main-2026-05-31-202532-prod
+          ports:
+            - containerPort: 3000
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: landmark-app-lb
+  namespace: landmark-devops
+  annotations:
+    service.beta.kubernetes.io/aws-load-balancer-scheme: internet-facing
+spec:
+  type: LoadBalancer
+  selector:
+    app: landmark-app
+  ports:
+    - port: 80
+      targetPort: 3000

@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: landmark-app-rs
+  namespace: landmark-devops
+  labels:
+    app: landmark-app
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: landmark-app
+  template:
+    metadata:
+      labels:
+        app: landmark-app
+    spec:
+      containers:
+        - name: app
+          image: landmark-devops:latest
+          ports:
+            - containerPort: 3000
+          resources:
+            requests:
+              memory: "128Mi"
+              cpu: "100m"
+            limits:
+              memory: "256Mi"
+              cpu: "500m"

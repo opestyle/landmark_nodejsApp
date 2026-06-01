@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: landmark-monitor
+  namespace: landmark-devops
+  labels:
+    app: landmark-monitor
+spec:
+  selector:
+    matchLabels:
+      app: landmark-monitor
+  template:
+    metadata:
+      labels:
+        app: landmark-monitor
+    spec:
+      tolerations:
+        - key: node-role.kubernetes.io/control-plane
+          effect: NoSchedule
+      containers:
+        - name: monitor
+          image: busybox:latest
+          command:
+            - /bin/sh
+            - -c
+            - |
+              while true; do
+                echo "Node: $(hostname) | Time: $(date)"
+                sleep 30
+              done
+          resources:
+            requests:
+              memory: "64Mi"
+              cpu: "50m"
+            limits:
+              memory: "128Mi"
+              cpu: "100m"

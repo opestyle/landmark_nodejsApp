@@ -1,0 +1,912 @@
+Landmark Technologies
+Introduction to Git and GitHub
+Author: Prof. Prince Chafah
+. Understanding Version Control and Git
+In modern software development and IT operations, managing changes to code and
+other project files is paramount. This is where Version Control Systems (VCS) become
+indispensable. A VCS is a software tool that tracks and manages changes to a set of
+f
+iles over time. It allows multiple people to collaborate on a project, track every
+modification, revert to previous versions, and manage different lines of development
+simultaneously.
+Git is the most widely adopted distributed version control system (DVCS) globally.
+Created by Linus Torvalds in 
+, Git is renowned for its speed, data integrity, and
+support for distributed, non-linear workflows. Unlike older centralized VCSs, every
+developer’s working copy of the code is a full-fledged repository with complete history
+and full version-tracking capabilities, independent of network access or a central
+server.
+GitHub is a web-based platform that provides hosting for Git repositories. It extends
+Git’s capabilities by offering features for collaboration, project management, code
+review, and social coding. While Git is the underlying technology for version control,
+GitHub provides the infrastructure and tools to host and manage your Git-based
+projects in the cloud.
+. Setting Up Git: Configuration
+Before you can start using Git, you need to install it (if not already present) and
+configure your identity. This identity will be attached to every change you record,
+ensuring traceability and accountability.
+. . Installing Git (if necessary)
+On Amazon Linux, Git is often pre-installed. If not, you can install it using the package
+manager:
+sudo yum install git -y
+. . Configuring Your User Name
+This command sets the name that will be recorded as the author of your commits. It’s
+crucial for identifying who made which changes.
+Command:
+git config --global user.name "Your Name"
+Explanation:
+git config : The command used to set Git configuration values.--global : This flag ensures that the setting applies to all Git repositories on your
+current user account. You only need to run this once.
+user.name : The specific configuration key for your author name.
+"Your Name" : Replace this with your actual full name (e.g., “John Doe”). Use
+double quotes if your name contains spaces.
+Example:
+[ec2-user@ip-172-31-XX-XX ~]$ git config --global user.name "Prof Prince 
+Chafah"
+. . Configuring Your User Email
+This command sets the email address that will be associated with your commits. It’s
+often the email linked to your GitHub account.
+Command:
+git config --global user.email "your_email@example.com"
+Explanation:
+user.email : The specific configuration key for your author email.
+"your_email@example.com" : Replace this with your actual email address (e.g.,
+“prince.chafah@landmarktech.com”).
+Example:
+[ec2-user@ip-172-31-XX-XX ~]$ git config --global user.email 
+"prince.chafah@landmarktech.com"
+. . Verifying Your Configuration
+You can always check your global Git settings to ensure they are correctly applied.
+Command:
+git config --global --list
+Explanation:--list : Displays all the configuration variables set at the global level.
+Sample Output:
+[ec2-user@ip-172-31-XX-XX ~]$ git config --global --list
+user.name=Prof Prince Chafah
+user.email=prince.chafah@landmarktech.com
+[ec2-user@ip-172-31-XX-XX ~]$
+Assignment . : Initial Git Setup
+Task: On your Amazon Linux server, install Git if it’s not already installed. Then,
+configure your global Git username and email address using your own name and a
+valid email. Finally, verify these settings.
+Expected Output (example):
+[ec2-user@ip-172-31-XX-XX ~]$ # (Commands to install git if needed)
+[ec2-user@ip-172-31-XX-XX ~]$ git config --global user.name "Your Name"
+[ec2-user@ip-172-31-XX-XX ~]$ git config --global user.email 
+"your.email@example.com"
+[ec2-user@ip-172-31-XX-XX ~]$ git config --global --list
+user.name=Your Name
+user.email=your.email@example.com
+[ec2-user@ip-172-31-XX-XX ~]$
+. Core Git Workflow: The Fundamentals
+This section covers the essential Git commands you will use daily to manage your
+projects. We will walk through initializing a repository, tracking changes, saving
+snapshots, and interacting with remote repositories.
+. . 
+git init: Starting a New Project
+To begin tracking a project with Git, you first need to initialize a Git repository in your
+project directory. This command creates a hidden 
+.git folder that stores all the
+necessary metadata and object database for version control.
+Command:
+git init
+Explanation:
+git init : Transforms the current directory into a Git repository. It sets up the
+core Git files and structures.
+Scenario: You are starting a new web development project for Landmark
+Technologies.
+Example . . : Initializing a Project
+[ec2-user@ip-172-31-XX-XX ~]$ mkdir landmark_website # Create a new project 
+directory
+[ec2-user@ip-172-31-XX-XX ~]$ cd landmark_website/ # Navigate into the new 
+directory
+[ec2-user@ip-172-31-XX-XX landmark_website]$ git init # Initialize Git 
+repository here
+Initialized empty Git repository in /home/ec2-user/landmark_website/.git/
+[ec2-user@ip-172-31-XX-XX landmark_website]$ ls -a # List all files, 
+including hidden ones, to see the .git folder
+.  ..  .git
+[ec2-user@ip-172-31-XX-XX landmark_website]$
+. . 
+git status: Checking Your Project’s State
+git status is your go-to command to understand the current state of your working
+directory and staging area. It tells you which files Git is tracking, which have been
+modified, and which are ready to be saved.
+Command:
+git status
+Explanation:
+git status : Provides a summary of changes. It categorizes files as untracked,
+modified, or staged.
+Scenario: After initializing your project, you create some initial files.
+Example . . : Status with New Untracked Files
+[ec2-user@ip-172-31-XX-XX landmark_website]$ echo "<h1>Welcome</h1>" > 
+index.html # Create an HTML file
+[ec2-user@ip-172-31-XX-XX landmark_website]$ echo "body { font-family: sans
+serif; }" > style.css # Create a CSS file
+[ec2-user@ip-172-31-XX-XX landmark_website]$ git status
+On branch master
+No commits yet
+Untracked files:
+(use "git add <file>..." to include in what will be committed)
+index.html
+style.css
+nothing added to commit but untracked files present (use "git add" to track)
+[ec2-user@ip-172-31-XX-XX landmark_website]$
+. . 
+git add: Staging Changes
+git add is used to move changes from your working directory to the staging area
+(also known as the index). The staging area is a temporary snapshot of what will go
+into your next commit. It allows you to carefully select which changes to include in a
+commit.
+Command:
+git add <file_name>
+# To stage all changes in the current directory:
+git add .
+Explanation:
+git add <file_name> : Adds the specified file to the staging area.
+git add .: Adds all new and modified files in the current directory and its
+subdirectories to the staging area.
+Scenario: You want to prepare your 
+index.html and 
+style.css files for your first
+commit.
+Example . . : Staging Specific Files
+[ec2-user@ip-172-31-XX-XX landmark_website]$ git add index.html # Stage only 
+index.html
+[ec2-user@ip-172-31-XX-XX landmark_website]$ git status
+On branch master
+No commits yet
+Changes to be committed:
+(use "git rm --cached <file>..." to unstage)
+new file:   index.html
+Untracked files:
+(use "git add <file>..." to include in what will be committed)
+style.css
+[ec2-user@ip-172-31-XX-XX landmark_website]$
+Example . . : Staging All Changes
+No commits yet
+[ec2-user@ip-172-31-XX-XX landmark_website]$ git add . # Stage all changes
+[ec2-user@ip-172-31-XX-XX landmark_website]$ git status
+On branch master
+Changes to be committed:
+(use "git rm --cached <file>..." to unstage)
+new file:   index.html
+new file:   style.css
+[ec2-user@ip-172-31-XX-XX landmark_website]$
+. . 
+git commit: Saving a Snapshot
+git commit takes everything from the staging area and permanently stores it as a
+new snapshot in your repository’s history. Each commit must have a descriptive
+message explaining the changes made.
+Command:
+git commit -m "Your descriptive commit message"
+Explanation:
+git commit : Records the staged changes.-m "message" : Provides the commit message directly on the command line.
+Good commit messages are vital for understanding project history.
+Scenario: You have completed the initial setup of your website and want to save this
+version.
+Example . . : Making Your First Commit
+[ec2-user@ip-172-31-XX-XX landmark_website]$ git commit -m "Initial website 
+setup: added basic HTML and CSS"
+[master (root-commit) 7a1b2c3] Initial website setup: added basic HTML and 
+CSS
+2 files changed, 3 insertions(+)
+create mode 100644 index.html
+create mode 100644 style.css
+[ec2-user@ip-172-31-XX-XX landmark_website]$ git status
+On branch master
+nothing to commit, working tree clean
+[ec2-user@ip-172-31-XX-XX landmark_website]$
+. . 
+git remote: Connecting to Remote Repositories
+Remote repositories are versions of your project hosted on the internet or network,
+like on GitHub. 
+git remote allows you to manage these connections.
+Command:
+git remote add <name> <url>
+Explanation:
+git remote add: Adds a new remote repository.
+<name> : A short, memorable name for the remote (conventionally 
+the primary remote).
+<url> : The URL of the remote repository (e.g., 
+origin for
+https://github.com/your
+username/your-repo.git ).
+Scenario: You have created an empty repository on GitHub and want to link your local
+project to it.
+Example . . : Adding a Remote Origin
+(Assume 
+you 
+have 
+created 
+an 
+empty 
+GitHub 
+https://github.com/ProfPrinceChafah/landmark_website.git )
+repository 
+[ec2-user@ip-172-31-XX-XX landmark_website]$ git remote add origin 
+https://github.com/ProfPrinceChafah/landmark_website.git
+[ec2-user@ip-172-31-XX-XX landmark_website]$ git remote -v # Verify the 
+remote connection
+origin https://github.com/ProfPrinceChafah/landmark_website.git (fetch)
+origin https://github.com/ProfPrinceChafah/landmark_website.git (push)
+[ec2-user@ip-172-31-XX-XX landmark_website]$
+at
+. . 
+git push: Uploading Changes to GitHub
+git push sends your committed changes from your local repository to the remote
+repository (e.g., GitHub). This makes your local work available to others and serves as
+a backup.
+Command:
+git push -u <remote_name> <branch_name>
+# After the first push, you can often just use:
+git push
+Explanation:
+git push : Uploads local commits.
+-u : Sets the upstream branch, linking your local branch to the remote one. This
+is usually done on the first push of a new branch.
+<remote_name> : The name of the remote (e.g., 
+origin ).
+<branch_name> : The branch you want to push (e.g., 
+master or 
+Scenario: You want to upload your initial website setup to GitHub.
+Example . . : Pushing Your First Commit
+main ).
+[ec2-user@ip-172-31-XX-XX landmark_website]$ git push -u origin master
+Username for 'https://github.com': ProfPrinceChafah
+Password for 'https://ProfPrinceChafah@github.com': # Enter your GitHub 
+password or Personal Access Token
+Enumerating objects: 4, done.
+Counting objects: 100% (4/4), done.
+Delta compression using up to 2 threads.
+Compressing objects: 100% (2/2), done.
+Writing objects: 100% (4/4), 337 bytes | 337.00 KiB/s, done.
+Total 4 (delta 0), reused 0 (delta 0)
+To https://github.com/ProfPrinceChafah/landmark_website.git
+* [new branch]      
+master -> master
+Branch 'master' set up to track remote branch 'master' from 'origin'.
+[ec2-user@ip-172-31-XX-XX landmark_website]$
+. . 
+git pull: Downloading Changes from GitHub
+git pull is used to fetch (download) changes from a remote repository and integrate
+them into your current local branch. This keeps your local repository synchronized
+with the remote.
+Command:
+git pull <remote_name> <branch_name>
+Explanation:
+git pull : Fetches and merges changes.
+<remote_name> : The name of the remote (e.g., 
+origin ).
+<branch_name> : The branch you want to pull from (e.g., 
+master or 
+main ).
+Scenario: A colleague has pushed updates to the 
+master branch on GitHub, and you
+need to get those changes.
+Example . . : Pulling Latest Changes
+(Assume a colleague added 
+about.html and pushed it to GitHub)
+[ec2-user@ip-172-31-XX-XX landmark_website]$ git pull origin master
+remote: Enumerating objects: 3, done.
+remote: Counting objects: 100% (3/3), done.
+remote: Compressing objects: 100% (1/1), done.
+remote: Total 2 (delta 0), reused 0 (delta 0), pack-reused 0
+Unpacking objects: 100% (2/2), done.
+From https://github.com/ProfPrinceChafah/landmark_website
+* branch            
+master     
+7a1b2c3..8d9e0f1  master     -> FETCH_HEAD-> origin/master
+Updating 7a1b2c3..8d9e0f1
+Fast-forward
+about.html | 1 +
+1 file changed, 1 insertion(+)
+create mode 100644 about.html
+[ec2-user@ip-172-31-XX-XX landmark_website]$ ls
+about.html  index.html  style.css
+[ec2-user@ip-172-31-XX-XX landmark_website]$
+Assignment . : Your First Git Project
+Task:
+. Create a new directory named 
+my_first_git_project .
+. Initialize a Git repository in this directory.
+. Create a file named 
+README.md with the content 
+. Stage and commit 
+# My First Git Project.
+README.md with the message “Initial commit: Added
+README.md”.
+. Create an empty repository on GitHub (e.g., 
+my_first_git_project ).
+. Add this GitHub repository as a remote named 
+origin to your local project.
+. Push your local 
+master branch to 
+origin .
+Expected Outcome: Your 
+README.md 
+my_first_git_project repository on GitHub.
+f
+ile 
+should appear in your
+. Branching: Working on Features Independently
+Branching is one of Git’s most powerful features. It allows you to diverge from the
+main line of development and continue to work independently without affecting the
+main project. Think of it like creating a separate copy of your project where you can
+experiment, add new features, or fix bugs, and then merge those changes back into the
+main project when they are ready.
+. . 
+git branch: Managing Branches
+This command is used to list, create, or delete branches.
+Command:
+git branch # List all branches
+git branch <new_branch_name> # Create a new branch
+Explanation:
+git branch : Shows all local branches and highlights the current one.
+git branch <new_branch_name> : Creates a new branch pointer to the current
+commit.
+Scenario: You want to add a new contact form feature to your website.
+Example . . : Creating a Feature Branch
+[ec2-user@ip-172-31-XX-XX landmark_website]$ git branch # Currently on 
+master
+* master
+[ec2-user@ip-172-31-XX-XX landmark_website]$ git branch feature/contact-form 
+# Create a new branch
+[ec2-user@ip-172-31-XX-XX landmark_website]$ git branch # List branches 
+again
+* master
+feature/contact-form
+[ec2-user@ip-172-31-XX-XX landmark_website]$
+. . 
+git checkout: Switching Branches
+After creating a branch, you need to switch to it to start working on it. 
+moves your 
+git checkout
+HEAD pointer to the specified branch, updating your working directory to
+match the state of that branch.
+Command:
+git checkout <branch_name>
+# Shortcut to create and switch to a new branch:
+git checkout -b <new_branch_name>
+Explanation:
+git checkout <branch_name> : Switches to the specified branch.
+git checkout -b <new_branch_name> : Creates a new branch and immediately
+switches to it.
+Scenario: You want to start developing the contact form feature on its dedicated
+branch.
+Example . . : Switching to the Feature Branch
+[ec2-user@ip-172-31-XX-XX landmark_website]$ git checkout feature/contact
+form
+Switched to branch 'feature/contact-form'
+[ec2-user@ip-172-31-XX-XX landmark_website]$ git branch # Verify current 
+branch
+master
+* feature/contact-form
+[ec2-user@ip-172-31-XX-XX landmark_website]$ echo "<form>Contact Form 
+Here</form>" > contact.html # Create a new file on this branch
+[ec2-user@ip-172-31-XX-XX landmark_website]$ git add contact.html
+[ec2-user@ip-172-31-XX-XX landmark_website]$ git commit -m "FEAT: Add basic 
+contact form page"
+[feature/contact-form 1a2b3c4] FEAT: Add basic contact form page
+1 file changed, 1 insertion(+)
+create mode 100644 contact.html
+[ec2-user@ip-172-31-XX-XX landmark_website]$
+Assignment . : Create and Work on a Branch
+Task: In your 
+my_first_git_project repository:
+. Create a new branch named 
+feature/add-footer .
+. Switch to this new branch.
+. Create a new file named 
+footer.html with the content 
+Landmark Technologies</footer> .
+<footer>Copyright
+. Stage and commit this new file with a message like “FEAT: Added basic footer
+component”.
+. Verify that 
+footer.html exists in your working directory while on this branch,
+and then switch back to the 
+master branch and verify it does not exist there.
+Expected Outcome: You should be able to switch between branches and see the
+footer.html file appear and disappear based on the active branch.
+. Advanced Git: Rebasing, Merging, and Conflict
+Resolution
+While 
+git merge is a common way to integrate changes, Git offers other powerful
+tools like 
+rebase for managing history. Understanding merge conflicts and how to
+resolve them is also a critical skill for collaborative development.
+. . 
+git merge: Integrating Changes (Revisited)
+As discussed, 
+git merge combines changes from one branch into another. There are
+two main types of merges:
+Fast-forward merge: Occurs when there is a linear path from the current branch
+tip to the target branch. Git simply moves the current branch pointer forward.
+Three-way merge: Occurs when the branches have diverged. Git creates a new
+commit (a “merge commit”) that has two parent commits, integrating the
+changes from both branches.
+Scenario: You have completed your 
+into 
+master .
+Example . . : Performing a Merge
+feature/contact-form and want to integrate it
+(Continuing from Assignment . , where 
+feature/contact-form has 
+and 
+master does not)
+contact.html
+[ec2-user@ip-172-31-XX-XX landmark_website]$ git checkout master # Ensure 
+you are on the target branch
+Switched to branch 'master'
+[ec2-user@ip-172-31-XX-XX landmark_website]$ git merge feature/contact-form
+Updating 8d9e0f1..1a2b3c4 # Example commit hashes
+Fast-forward
+contact.html | 1 +
+1 file changed, 1 insertion(+)
+create mode 100644 contact.html
+[ec2-user@ip-172-31-XX-XX landmark_website]$ ls
+about.html  contact.html  index.html  style.css
+[ec2-user@ip-172-31-XX-XX landmark_website]$
+. . 
+git rebase: Rewriting History
+git rebase is another way to integrate changes from one branch onto another, but
+instead of creating a merge commit, it rewrites the commit history. It takes all the
+commits from your feature branch and reapplies them one by one onto the tip of the
+target branch. This results in a linear history, which can be cleaner for some teams.
+When to use 
+rebase : Typically used to keep your feature branch up-to-date with
+master before merging, or to clean up your local commits before pushing to a shared
+remote.
+Caution: Never rebase commits that have already been pushed to a shared remote
+repository, as it rewrites history and can cause significant problems for collaborators.
+Command:
+git checkout <feature_branch>
+git rebase <target_branch>
+Explanation:
+git checkout <feature_branch> : Switch to your feature branch.
+git rebase <target_branch> : Reapplies your feature branch commits on top of
+the 
+<target_branch> .
+Scenario: You are working on 
+feature/new-design and the 
+received new updates. You want to incorporate 
+master branch has
+master ’s changes into your feature
+branch without a merge commit, keeping your feature branch’s history clean.
+Example . . : Rebasing a Feature Branch onto Master
+. Initial State:
+master has commits A, B, C.
+feature/new-design branched off 
+Meanwhile, 
+master at C, and has commits D, E.
+master has new commits F, G.
+A -- B -- C -- F -- G (master)
+\ 
+D -- E (feature/new-design)
+. Perform Rebase:
+[ec2-user@ip-172-31-XX-XX landmark_website]$ git checkout feature/new
+design
+Switched to branch 'feature/new-design'
+[ec2-user@ip-172-31-XX-XX landmark_website]$ git rebase master
+First, rewinding head to replay your work on top of it...
+Applying: Commit D message
+Applying: Commit E message
+. Resulting History:
+A -- B -- C -- F -- G (master)
+\ 
+D' -- E' (feature/new-design)
+(D’ and E’ are new commits with the same changes as D and E, but with new
+commit hashes, placed after G).
+. . Merge Conflicts: When Git Needs Your Help
+A merge conflict occurs when Git tries to combine changes from two different
+branches, and both branches have modified the same part of the same file in different
+ways. Git doesn’t know which change to keep, so it pauses the merge and asks you to
+resolve the conflict manually.
+Scenario: Two developers, Alice and Bob, are working on the 
+simultaneously.
+Setup for Conflict Scenario:
+. Start with a clean 
+master branch:
+index.html file
+[ec2-user@ip-172-31-XX-XX landmark_website]$ git checkout master
+[ec2-user@ip-172-31-XX-XX landmark_website]$ echo "<h1>Welcome to 
+Landmark Technologies</h1>" > index.html
+[ec2-user@ip-172-31-XX-XX landmark_website]$ git add index.html
+[ec2-user@ip-172-31-XX-XX landmark_website]$ git commit -m "Initial 
+homepage heading"
+. Alice creates 
+feature/alice and modifies 
+index.html :
+[ec2-user@ip-172-31-XX-XX landmark_website]$ git checkout -b 
+feature/alice
+Switched to a new branch 'feature/alice'
+[ec2-user@ip-172-31-XX-XX landmark_website]$ echo "<p>Alice's new 
+paragraph.</p>" >> index.html # Alice adds a line
+[ec2-user@ip-172-31-XX-XX landmark_website]$ git add index.html
+[ec2-user@ip-172-31-XX-XX landmark_website]$ git commit -m "Alice: 
+Added her paragraph"
+. Bob (on 
+master ) also modifies 
+index.html in the same area:
+[ec2-user@ip-172-31-XX-XX landmark_website]$ git checkout master
+Switched to branch 'master'
+[ec2-user@ip-172-31-XX-XX landmark_website]$ echo "<p>Bob's important 
+update.</p>" >> index.html # Bob adds a different line
+[ec2-user@ip-172-31-XX-XX landmark_website]$ git add index.html
+[ec2-user@ip-172-31-XX-XX landmark_website]$ git commit -m "Bob: Added 
+his update"
+. Alice tries to merge her changes into 
+master :
+[ec2-user@ip-172-31-XX-XX landmark_website]$ git merge feature/alice
+Auto-merging index.html
+CONFLICT (content): Merge conflict in index.html
+Automatic merge failed; fix conflicts and then commit the result.
+[ec2-user@ip-172-31-XX-XX landmark_website]$
+Git reports a merge conflict!
+. . Resolving Merge Conflicts
+When a conflict occurs, Git modifies the conflicting file(s) to show you both versions of
+the conflicting changes. It uses special markers to indicate the conflicting sections.
+Example . . : Resolving the 
+index.html Conflict
+. Identify the conflict: “`bash [ec-user@ip---XX-XX landmark_website]$ git
+status On branch master You have unmerged paths. (fix conflicts and run “git
+commit”) (use “git merge ‒abort” to abort the merge)
+Unmerged paths: (use “git add ” to mark resolution)
+both modified:   index.html
+no changes added to commit (use “git add” and/or “git commit -a”) [ec-user@ip---XX-XX landmark_website]$
+```
+Git clearly states `both modified: index.html` and that you have `unmerged 
+paths`.
+. Open the conflicting file (
+index.html ) in a text editor:
+The content of 
+index.html will look something like this:
+<h1>Welcome to Landmark Technologies</h1>
+<<<<<<< HEAD
+<p>Bob's important update.</p>
+=======
+<p>Alice's new paragraph.</p>
+>>>>>>> feature/alice
+<<<<<<< HEAD : Marks the beginning of the changes from your current
+branch (
+master ).
+======= : Separates the changes from the two branches.
+>>>>>>> feature/alice : Marks the end of the changes from the branch
+you are merging (
+feature/alice ).
+. Manually edit the file to resolve the conflict: You need to decide which changes
+to keep, or combine them. Let’s say you want to keep both Alice’s and Bob’s
+contributions.
+Edit 
+index.html to look like this (removing the Git conflict markers):
+<h1>Welcome to Landmark Technologies</h1>
+<p>Bob's important update.</p>
+<p>Alice's new paragraph.</p>
+conflict. 
+. Stage the resolved file: After editing, you need to tell Git that you have resolved
+the 
+“`bash 
+[ec-user@ip---XX-XX 
+gitaddindex.html[ec2 − user@ip − 172 − 31 −XX −XXlandmark ebsite]
+landmark_website]
+git
+status On branch master You have unmerged paths. (all conflicts fixed: run “git
+commit”)
+w
+Changes to be committed: (use “git restore ‒staged ” to unstage)
+modified:   index.html
+[ec-user@ip
+```--XX-XX landmark_website]$
+. Commit the merge: Finally, create a new commit to record the resolution.
+[ec2-user@ip-172-31-XX-XX landmark_website]$ git commit -m "Merge 
+branch 'feature/alice' into master - resolved conflict in index.html"
+[master 2b3c4d5] Merge branch 'feature/alice' into master - resolved 
+conflict in index.html
+[ec2-user@ip-172-31-XX-XX landmark_website]$
+Git often provides a default merge commit message, which you can accept or
+modify.
+Assignment . : Practice Merge Conflict Resolution
+Task: Create a scenario in your 
+my_first_git_project repository to intentionally
+cause and resolve a merge conflict:
+. Ensure your 
+master branch is up-to-date and clean.
+. Create a new branch 
+dev/feature-x and switch to it.
+. Modify a line in 
+README.md (e.g., change “# My First Git Project” to “# My
+Awesome Project”). Commit this change.
+. Switch back to 
+master .
+. Modify the same line in 
+README.md differently (e.g., change “# My First Git
+Project” to “# My Initial Project”). Commit this change.
+. Attempt to merge 
+dev/feature-x into 
+master . Observe the merge conflict.
+. Manually resolve the conflict in 
+README.md , deciding which version to keep or
+combining them.
+. Stage the resolved 
+README.md and commit the merge.
+Expected Outcome: Your 
+master branch should contain the merged 
+your chosen resolution, and the conflict should be fully resolved.
+README.md with
+. GitHub: Collaboration, Security, and Best Practices
+GitHub is more than just a place to store your Git repositories; it’s a powerful platform
+for collaborative software development. It provides a web interface for your Git
+projects, enabling features like issue tracking, code review, project management, and
+robust security controls.
+. . GitHub Account Setup (Recap)
+As discussed in Section . , creating a GitHub account is the first step. Ensure you have
+a unique username and a strong password. Your GitHub profile will be your
+professional identity in the open-source and development communities.
+. . GitHub Security: Protecting Your Code and Account
+Security is paramount when working with code, especially in a collaborative
+environment. GitHub offers several features to help you protect your account and your
+repositories.
+. . . Setting Up Multi-Factor Authentication (MFA)
+Multi-Factor Authentication (MFA), also known as Two-Factor Authentication ( FA),
+adds an extra layer of security to your GitHub account. Even if someone steals your
+password, they won’t be able to access your account without the second factor (e.g., a
+code from your phone).
+Why MFA is Important: It significantly reduces the risk of unauthorized access to your
+GitHub account, protecting your code and personal information.
+Steps to Enable MFA on GitHub:
+. Log in to GitHub: Go to 
+github.com and log in to your account.
+. Go to Settings: Click on your profile picture in the top-right corner, then select
+Settings.
+. Navigate to Account Security: In the left sidebar, click on Password and
+authentication (or Security).
+. Enable Two-factor authentication: Find the “Two-factor authentication”
+section and click Enable two-factor authentication.
+. Choose Your Method: GitHub typically offers two methods:
+Authenticator app: Recommended. Use an app like Google Authenticator,
+Authy, or Microsoft Authenticator on your smartphone. You’ll scan a QR
+code to link your account.
+SMS: Receive codes via text message. Less secure than an authenticator
+app but still better than no MFA.
+. Save Recovery Codes: GitHub will provide a list of recovery codes. These are
+crucial! Save them in a safe place (e.g., a password manager, printed out and
+stored securely) because they are your only way to access your account if you
+lose access to your primary MFA device.
+. Confirm Setup: Enter a code from your authenticator app or SMS to confirm the
+setup.
+. . Branch Protection Rules
+Branch protection rules are a powerful GitHub feature that allows repository
+administrators to enforce certain workflows for one or more branches. This is
+especially important for critical branches like 
+master or 
+main , which typically hold
+the stable, deployable version of your code.
+Why Branch Protection is Important: It prevents accidental or unauthorized changes
+to important branches, ensuring code quality and stability.
+Common Branch Protection Rules:
+Require pull request reviews before merging: All changes must be reviewed
+and approved by a certain number of people before they can be merged into the
+protected branch.
+Require status checks to pass before merging: Automated tests (like unit tests,
+linting, or build checks) must pass successfully before a pull request can be
+merged.
+Require linear history: Prevents merge commits, enforcing a rebase-only
+workflow.
+Include administrators: Applies the rules to repository administrators as well.
+Restrict who can push to matching branches: Limits direct pushes to the
+branch to specific users or teams.
+Steps to Set Up Branch Protection Rules on GitHub:
+. Navigate to Your Repository: Go to your repository on GitHub.
+. Go to Settings: Click on the Settings tab (usually near the top of the repository
+page).
+. Select Branches: In the left sidebar, click on Branches.
+. Add Rule: Under “Branch protection rules,” click Add rule.
+master or 
+. Specify Branch Name Pattern: Enter the name of the branch you want to protect
+(e.g., 
+main ). You can also use wildcards like 
+feature/* .
+. Choose Rules: Select the protection rules you want to enforce (e.g., “Require pull
+request reviews before merging,” “Require status checks to pass”).
+. Create/Save: Click Create or Save changes.
+Example Scenario: Protecting the 
+main Branch
+For a critical project at Landmark Technologies, you would typically protect the 
+branch with rules like:
+Require  approving reviews.
+main
+Require all automated CI/CD (Continuous Integration/Continuous Deployment)
+checks to pass.
+Prevent direct pushes to 
+main .
+This ensures that only thoroughly reviewed and tested code makes it into the main
+codebase.
+Assignment . : Secure Your GitHub Account and Repository
+Task:
+. If you haven’t already, enable Multi-Factor Authentication (MFA) for your
+GitHub account. Make sure to save your recovery codes securely.
+. In your 
+my_first_git_project repository on GitHub, navigate to the settings
+and create a branch protection rule for the 
+main (or 
+master ) branch. Configure
+it to:
+Require pull request reviews before merging.
+Require at least  approving review.
+Include administrators.
+Expected Outcome: Your GitHub account will be more secure, and your 
+main branch
+will have enforced rules for merging changes, requiring a pull request review.
+. Collaboration: Pull Requests and Logging
+Commands
+Collaboration is at the heart of modern software development, and GitHub provides
+powerful tools to facilitate it. Pull Requests are the primary mechanism for code
+review and merging changes, while logging commands help you understand and
+navigate your project’s history.
+. . Pull Requests (PRs): Proposing and Reviewing Changes
+A Pull Request (PR) (sometimes called a Merge Request in other systems) is a way to
+propose changes to a repository and initiate a discussion about those changes. When
+you create a PR, you’re essentially asking the maintainers of the target repository (or
+your teammates) to review your code, provide feedback, and eventually merge your
+changes into a specific branch (e.g., 
+main ).
+Why Use Pull Requests?
+Code Review: Allows other developers to examine your code for bugs, style
+issues, and best practices before it’s integrated.
+Discussion: Provides a dedicated place for comments, questions, and
+suggestions related to the proposed changes.
+Quality Assurance: Integrates with automated tests and checks (status checks)
+to ensure code quality.
+Documentation: Serves as a record of why and how changes were made.
+Scenario: You’ve completed a new feature on your 
+feature/new-feature branch and
+want to submit it for review and eventual integration into the 
+main branch of your
+Landmark Technologies project.
+Steps to Create a Pull Request (on GitHub):
+. Push your feature branch to GitHub: First, ensure your local feature branch is
+pushed to your remote repository on GitHub.
+[ec2-user@ip-172-31-XX-XX landmark_website]$ git push origin 
+feature/new-feature
+. Go to your repository on GitHub: Open your web browser and navigate to your
+project’s repository on GitHub.
+. Initiate a New Pull Request: GitHub will often show a prominent button or
+banner saying “Compare & pull request” when it detects a newly pushed branch.
+Alternatively, go to the “Pull requests” tab and click “New pull request.”
+. Select Branches: Choose the 
+usually 
+main or 
+base branch (the branch you want to merge into,
+master ) and the 
+compare branch (your feature branch, e.g.,
+feature/new-feature ).
+. Add Title and Description: Provide a clear, concise title for your PR (e.g., “FEAT:
+Implement user login functionality”). In the description, explain what changes
+you made, why you made them, and any relevant context or testing instructions.
+. Assign Reviewers (Optional): Request specific teammates to review your code.
+. Create Pull Request: Click the “Create pull request” button.
+Reviewing and Merging a Pull Request: Once a PR is created, reviewers can:
+View Changes: See a side-by-side comparison of the old and new code.
+Add Comments: Leave feedback on specific lines of code or general suggestions.
+Approve/Request Changes: Approve the PR if the code is good, or request
+changes if modifications are needed.
+After all required reviews and status checks pass, the PR can be merged. GitHub
+typically offers options like:
+Merge pull request: Creates a merge commit.
+Squash and merge: Combines all commits from the feature branch into a single
+commit on the base branch.
+Rebase and merge: Reapplies the feature branch commits onto the base branch,
+creating a linear history.
+. . Logging Commands: Understanding Project History
+Git keeps a detailed history of every change. Logging commands help you explore this
+history, understand who did what, when, and why.
+. . . 
+git log: The Project’s Diary
+git log is your primary tool for viewing the commit history. It shows a list of
+commits, each with its unique ID (hash), author, date, and commit message.
+Command:
+git log
+Explanation:
+git log: Displays commits in reverse chronological order (newest first).
+Example . . : Basic Log Output
+[ec2-user@ip-172-31-XX-XX landmark_website]$ git log
+commit 2b3c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9a0b1c (HEAD -> master)
+Author: Prof Prince Chafah <prince.chafah@landmarktech.com>
+Date:   Fri Apr 12 15:30:00 2026 +0000
+Merge branch 'feature/alice' into master - resolved conflict in 
+index.html
+commit 8d9e0f1a2b3c4d5e6f7a8b9c0d1e2f3a4b5c6d7e
+Author: Prof Prince Chafah <prince.chafah@landmarktech.com>
+Date:   Fri Apr 12 15:00:00 2026 +0000
+Bob: Added his update
+commit 1a2b3c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9a0b (feature/alice)
+Author: Prof Prince Chafah <prince.chafah@landmarktech.com>
+Date:   Fri Apr 12 14:50:00 2026 +0000
+Alice: Added her paragraph
+commit 7a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b
+Author: Prof Prince Chafah <prince.chafah@landmarktech.com>
+Date:   Fri Apr 12 14:00:00 2026 +0000
+Initial homepage heading
+(END)
+(Press 
+q to exit the log view.)
+Useful 
+git log Options:
+git log --oneline : Shows each commit on a single line, very compact.
+[ec2-user@ip-172-31-XX-XX landmark_website]$ git log --oneline
+2b3c4d5 (HEAD -> master) Merge branch 'feature/alice' into master - 
+resolved conflict in index.html
+8d9e0f1 Bob: Added his update
+1a2b3c4 (feature/alice) Alice: Added her paragraph
+7a1b2c3 Initial homepage heading
+git log --graph --oneline --all : Visualizes the branch and merge history
+with ASCII art.
+[ec2-user@ip-172-31-XX-XX landmark_website]$ git log --graph --oneline --all
+*   2b3c4d5 (HEAD -> master) Merge branch 'feature/alice' into master - 
+resolved conflict in index.html
+|\  
+| * 1a2b3c4 (feature/alice) Alice: Added her paragraph
+* | 8d9e0f1 Bob: Added his update
+|/
+* 7a1b2c3 Initial homepage heading
+git log -p: Shows the full diff (changes) introduced by each commit.
+git log --author="Prof Prince Chafah" : Filters commits by a specific author.
+git log --grep="FEAT" : Filters commits by a pattern in the commit message.
+. . . 
+git reflog : Your Personal Git Journal
+git reflog (reference log) is a powerful command that records every single change
+to your 
+HEAD (the current commit you’re on). This includes commits, checkouts,
+merges, rebases, and even reverts. It’s like a safety net, allowing you to recover lost
+commits or branches, even if they were seemingly deleted.
+Command:
+git reflog
+Explanation:
+git reflog : Shows a chronological list of where your 
+to your repository and not part of the shared history.
+HEAD has been. It’s local
+Scenario: You accidentally reset your branch or deleted a branch, and you want to find
+a previous state.
+Example . . : Viewing the Reflog
+[ec2-user@ip-172-31-XX-XX landmark_website]$ git reflog
+2b3c4d5 (HEAD -> master) HEAD@{0}: commit (merge): Merge branch 
+'feature/alice' into master - resolved conflict in index.html
+8d9e0f1 HEAD@{1}: commit: Bob: Added his update
+7a1b2c3 HEAD@{2}: checkout: moving from feature/alice to master
+1a2b3c4 (feature/alice) HEAD@{3}: commit: Alice: Added her paragraph
+7a1b2c3 HEAD@{4}: checkout: moving from master to feature/alice
+7a1b2c3 HEAD@{5}: commit (initial): Initial homepage heading
+[ec2-user@ip-172-31-XX-XX landmark_website]$
+What happened: The reflog shows every action that moved your 
+HEAD . You can see
+commits, checkouts, and merges. Each entry has a 
+HEAD@{<index>} reference, which
+you can use with commands like 
+git reset HEAD@{<index>} to go back to that
+specific state.
+Assignment . : Explore Your Project History
+Task: In your 
+my_first_git_project repository:
+. Make a few more commits (e.g., add a new file, modify an existing one, commit
+each change separately).
+. Use 
+git log --oneline to view a concise history of your commits.
+. Use 
+git log --graph --oneline --all to see a graphical representation of
+your branches and merges.
+. Perform a 
+git checkout to an older commit (using its hash from 
+see the project at that point in time. Then 
+git log) to
+git checkout master to return to
+your main branch.
+. Use 
+git reflog to see the history of your 
+checkout you just performed.
+HEAD movements, including the
+Expected Outcome: You should be able to navigate through your project’s history and
+understand how 
+git log and 
+git reflog provide different perspectives on your
+repository’s evolution.
